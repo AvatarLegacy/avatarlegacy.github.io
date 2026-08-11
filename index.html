@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="avatarlegacy-logo.png">
+<title>AvatarLegacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0a0f;
+    --bg-soft: #0e0d13;
+    --surface: #151320;
+    --surface-2: #1b1826;
+    --border: #2a2635;
+    --border-soft: #201d2b;
+    --text: #ECEAF3;
+    --text-dim: #9994ab;
+    --text-faint: #6b667a;
+    --violet: #8B5CF6;
+    --violet-soft: #6d4fc0;
+    --lavender: #B7A6FF;
+    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-display: var(--font-ui);
+    --font-mono: 'Manrope', system-ui, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-ui);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:var(--font-ui);}
+  ::selection{background:var(--violet-soft);color:#fff;}
+  :focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px;}
+
+  .bg-layer{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(139,92,246,0.08), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(139,92,246,0.05), transparent 60%);
+  }
+
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 40px;
+    backdrop-filter:blur(10px);
+    background:linear-gradient(to bottom, rgba(11,10,15,0.85), transparent);
+  }
+  .nav-brand{display:flex;align-items:center;cursor:pointer;gap:10px;}
+  .nav-brand img{height:34px;width:auto;display:block;}
+  .nav-icons{display:flex;gap:4px;align-items:center;}
+  .nav-icons a, .nav-icons button{
+    display:flex;align-items:center;justify-content:center;
+    width:34px;height:34px;border-radius:8px;
+    color:var(--text-dim);background:transparent;border:none;cursor:pointer;
+    transition:background .25s ease, color .25s ease;
+  }
+  .nav-icons .menu-btn{display:none;}
+  body.wiki-mode .nav-icons .menu-btn{display:flex;}
+  .nav-icons a:hover, .nav-icons button:hover{background:rgba(139,92,246,0.1);color:var(--lavender);}
+  .nav-icons svg{width:16px;height:16px;}
+
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:0 24px;
+    z-index:1;
+  }
+  .hero-title-img{
+    width: min(900px, 90vw);
+    height: auto;
+    aspect-ratio: 614 / 109;
+    object-fit: contain;
+    display:block;
+    filter: drop-shadow(0 0 40px rgba(139,92,246,0.28)) drop-shadow(0 0 2px rgba(139,92,246,0.15));
+    transition: transform .1s ease-out;
+  }
+  @media (max-width:600px){
+    .hero-title-img{ width:94vw; }
+  }
+  .hero-sub{
+    margin-top:30px;
+    font-family:var(--font-display);letter-spacing:-0.02em;
+    font-size:22px;
+    color:var(--text-dim);
+    letter-spacing:.01em;
+  }
+  .hero-sub b{
+    color:var(--text);
+    font-weight:700;
+    position:relative;
+  }
+  .hero-sub b::after{
+    content:'';position:absolute;left:0;right:0;bottom:-3px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--violet), transparent);
+    opacity:.6;
+  }
+
+  .section{
+    position:relative;z-index:1;
+    max-width:1180px;margin:0 auto;
+    padding:160px 40px;
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  }
+  .section.reverse .section-media{order:2;}
+  .section.reverse .section-copy{order:1;}
+  .section-copy{
+    opacity:0;transform:translateY(24px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .section-media{
+    opacity:0;transform:translateY(24px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1) .12s, transform .8s cubic-bezier(.2,.7,.2,1) .12s;
+  }
+  .section.in-view .section-copy, .section.in-view .section-media{opacity:1;transform:translateY(0);}
+
+  .eyebrow{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--violet-soft);
+    display:flex;align-items:center;gap:10px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:'';width:16px;height:1px;background:var(--violet);}
+  .section h2{
+    font-family:var(--font-display);letter-spacing:-0.02em;font-weight:700;
+    font-size:clamp(28px,3.4vw,42px);line-height:1.15;
+    margin-bottom:18px;
+  }
+  .section p{
+    color:var(--text-dim);font-size:16px;line-height:1.7;max-width:440px;
+  }
+  .section p + p{margin-top:14px;}
+
+  .media-frame{
+    position:relative;aspect-ratio:4/3;border-radius:14px;
+    background:linear-gradient(145deg, var(--surface), var(--bg-soft));
+    border:1px solid var(--border);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,0.02);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;transition:border-color .35s ease, transform .35s ease;
+  }
+  .media-frame:hover{border-color:rgba(139,92,246,.4);transform:translateY(-2px);}
+  .media-frame::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 20%, rgba(139,92,246,.08), transparent 55%);
+  }
+  .media-frame .tag{
+    position:relative;z-index:1;font-family:var(--font-mono);font-size:11px;
+    letter-spacing:.1em;color:var(--text-faint);text-transform:uppercase;
+    border:1px dashed var(--border);padding:6px 14px;border-radius:20px;
+  }
+  .media-frame img, .sticky-media img, .wiki-img-placeholder img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  .sticky-section{
+    position:relative;max-width:1180px;margin:0 auto;padding:0 40px 160px;
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  }
+  .sticky-media-wrap{position:relative;}
+  .sticky-media{
+    position:sticky;top:120px;
+    aspect-ratio:4/3;border-radius:14px;
+    background:linear-gradient(145deg, var(--surface), var(--bg-soft));
+    border:1px solid var(--border);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .sticky-media .tag{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:.1em;text-transform:uppercase;border:1px dashed var(--border);padding:6px 14px;border-radius:20px;}
+  .sticky-copy-block{
+    padding:120px 0;border-top:1px solid var(--border-soft);
+    opacity:0;transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .sticky-copy-block:first-child{border-top:none;}
+  .sticky-copy-block.in-view{opacity:1;transform:translateY(0);}
+  .sticky-copy-block .step{
+    font-family:var(--font-mono);font-size:11px;color:var(--violet-soft);
+    letter-spacing:.14em;margin-bottom:14px;text-transform:uppercase;
+  }
+  .sticky-copy-block h3{font-family:var(--font-display);letter-spacing:-0.02em;font-size:26px;font-weight:700;margin-bottom:12px;}
+  .sticky-copy-block p{color:var(--text-dim);font-size:15.5px;line-height:1.7;max-width:420px;}
+
+  @media (max-width:900px){
+    .section, .sticky-section{grid-template-columns:1fr;gap:40px;padding:100px 24px;}
+    .section.reverse .section-media{order:1;}
+    .section.reverse .section-copy{order:2;}
+    .sticky-media{position:static;}
+    .sticky-copy-block{padding:60px 0;}
+  }
+
+  .divider{
+    max-width:1180px;margin:0 auto;padding:0 40px;
+  }
+  .divider .line{height:1px;background:linear-gradient(90deg, transparent, var(--border), transparent);}
+
+  footer{
+    position:relative;z-index:1;
+    padding:80px 40px 50px;text-align:center;
+    border-top:1px solid var(--border-soft);
+    margin-top:80px;
+  }
+  footer .foot-title{display:flex;justify-content:center;}
+  footer .foot-logo{height:26px;width:auto;opacity:.85;display:inline-block;}
+  footer .foot-links{margin-top:18px;display:flex;justify-content:center;gap:28px;font-size:13px;color:var(--text-dim);}
+  footer .foot-links a:hover{color:var(--lavender);}
+  footer .copyright{margin-top:30px;font-size:11.5px;color:var(--text-faint);font-family:var(--font-mono);}
+
+  #wiki-view{display:none;}
+  body.wiki-mode #wiki-view{display:block;}
+  body.wiki-mode #landing-view{display:none;}
+
+  .wiki-shell{
+    display:grid;grid-template-columns:270px 1fr;
+    height:100vh;overflow:hidden;
+  }
+  .wiki-sidebar{
+    border-right:1px solid var(--border-soft);
+    padding:110px 28px 40px;
+    height:100%;overflow-y:auto;
+    background:var(--bg);
+    transition:transform .25s ease;
+  }
+  .sidebar-top{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:28px;
+  }
+  .wiki-sidebar .back{
+    font-family:var(--font-mono);font-size:11px;color:var(--text-faint);
+    letter-spacing:.1em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;
+    transition:color .2s ease;cursor:pointer;
+  }
+  .wiki-sidebar .back:hover{color:var(--lavender);}
+  .sidebar-collapse{
+    width:30px;height:30px;border-radius:7px;flex-shrink:0;
+    background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+    font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .sidebar-collapse:hover{background:var(--surface-2);color:var(--lavender);border-color:rgba(139,92,246,.4);}
+  .wiki-sidebar .wiki-label{font-family:var(--font-display);letter-spacing:-0.02em;font-weight:700;font-size:20px;margin-bottom:24px;}
+  .wiki-nav-item{
+    display:flex;align-items:baseline;gap:10px;
+    padding:9px 10px;border-radius:7px;cursor:pointer;
+    font-size:14px;color:var(--text-dim);
+    transition:background .2s ease, color .2s ease;
+  }
+  .wiki-nav-item .n{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);}
+  .wiki-nav-item:hover{background:var(--surface);color:var(--text);}
+  .wiki-nav-item.active{background:rgba(139,92,246,.1);color:var(--lavender);}
+  .wiki-nav-item.active .n{color:var(--violet);}
+
+  .sidebar-reopen{
+    position:fixed;top:110px;left:0;z-index:40;
+    width:34px;height:34px;
+    background:var(--surface);border:1px solid var(--border);border-left:none;
+    border-radius:0 8px 8px 0;
+    color:var(--text-dim);cursor:pointer;font-size:14px;
+    display:none;align-items:center;justify-content:center;
+    transition:background .2s ease, color .2s ease;
+  }
+  .sidebar-reopen:hover{background:var(--surface-2);color:var(--lavender);}
+  body.wiki-sidebar-hidden .wiki-sidebar{display:none;}
+  body.wiki-sidebar-hidden .wiki-shell{grid-template-columns:1fr;}
+  body.wiki-mode.wiki-sidebar-hidden .sidebar-reopen{display:flex;}
+
+  .wiki-main{
+    height:100%;overflow-y:auto;
+    padding:110px 48px 120px;
+  }
+  .wiki-article{max-width:760px;margin:0 auto;}
+  .wiki-hero{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    min-height:60vh;
+    padding:20px 0 10px;
+  }
+  .wiki-hero-title{
+    width:min(900px,90vw);height:auto;aspect-ratio:614/109;object-fit:contain;display:block;
+    filter:drop-shadow(0 0 40px rgba(139,92,246,0.28)) drop-shadow(0 0 2px rgba(139,92,246,0.15));
+  }
+  .wiki-hero-sub{
+    margin-top:30px;
+    font-family:var(--font-display);letter-spacing:.01em;
+    font-size:22px;color:var(--text-dim);
+  }
+  .wiki-hero-sub b{
+    color:var(--text);font-weight:700;position:relative;
+  }
+  .wiki-hero-sub b::after{
+    content:'';position:absolute;left:0;right:0;bottom:-3px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--violet), transparent);
+    opacity:.6;
+  }
+  .wiki-page-title{
+    font-family:var(--font-display);letter-spacing:-0.02em;font-weight:700;
+    font-size:32px;margin-bottom:10px;
+  }
+  .wiki-desc{color:var(--text-dim);font-size:16px;line-height:1.7;margin-bottom:30px;}
+  .wiki-text{color:var(--text-dim);font-size:15px;line-height:1.75;margin-bottom:16px;}
+  .wiki-hint{
+    margin-top:40px;padding:18px 20px;border-radius:12px;
+    background:var(--surface);border:1px dashed var(--border);
+    color:var(--text-dim);font-size:14px;text-align:center;
+    font-family:var(--font-mono);letter-spacing:.04em;
+  }
+  .wiki-img-placeholder{
+    margin-top:24px;aspect-ratio:16/8;border-radius:12px;
+    background:linear-gradient(145deg, var(--surface), var(--bg-soft));
+    border:1px solid var(--border);overflow:hidden;
+  }
+
+  .topic-nav{
+    display:flex;gap:12px;
+    margin-top:48px;padding-top:28px;
+    border-top:1px solid var(--border-soft);
+  }
+  .topic-nav-btn{
+    flex:1;min-width:0;
+    display:flex;flex-direction:column;gap:6px;
+    padding:14px 16px;border-radius:10px;
+    background:var(--surface);border:1px solid var(--border);
+    color:var(--text-dim);cursor:pointer;text-align:left;
+    transition:border-color .25s ease, background .25s ease, transform .25s ease, color .25s ease;
+  }
+  .topic-nav-btn.next{text-align:right;align-items:flex-end;}
+  .topic-nav-btn .dir{
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--text-faint);
+  }
+  .topic-nav-btn .topic{font-size:15px;font-weight:600;color:var(--lavender);}
+  .topic-nav-btn:hover{border-color:rgba(139,92,246,.45);background:var(--surface-2);color:var(--text);transform:translateY(-1px);}
+
+  .wiki-overlay{
+    position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.55);
+    display:none;
+  }
+  body.wiki-drawer-open .wiki-overlay{display:block;}
+
+  @media (max-width:800px){
+    .nav{padding:18px 20px;}
+    .wiki-shell{grid-template-columns:1fr;}
+    .wiki-sidebar{
+      position:fixed;top:0;left:0;bottom:0;z-index:80;
+      width:min(300px,85vw);
+      padding:100px 24px 40px;
+      transform:translateX(-100%);
+      border-right:1px solid var(--border);
+    }
+    body.wiki-drawer-open .wiki-sidebar{transform:translateX(0);}
+    body.wiki-sidebar-hidden .wiki-sidebar{display:block;}
+    .sidebar-reopen{display:none !important;}
+    .wiki-main{padding:100px 24px 80px;}
+    .wiki-hero{min-height:50vh;}
+    .wiki-hero-title{width:92vw;}
+    .topic-nav{flex-direction:column;}
+    .topic-nav-btn.next{text-align:left;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+
+<nav class="nav">
+  <div class="nav-brand" onclick="goHome()"><img src="avatarlegacy-logo.png" alt="AvatarLegacy"></div>
+  <div class="nav-icons">
+    <button class="menu-btn" onclick="toggleSidebarMenu()" title="Wiki menu" aria-label="Toggle wiki menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a href="https://discord.gg/PEASt8et46" target="_blank" rel="noopener" title="Discord" aria-label="Discord">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.9A18 18 0 0 0 15.9 3.5c-.2.4-.5.9-.6 1.3a16.8 16.8 0 0 0-6.6 0c-.2-.4-.4-.9-.6-1.3A18 18 0 0 0 3.7 4.9C1.4 8.4 0.8 11.9 1 15.3a18.2 18.2 0 0 0 5.5 2.8c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.8l.4-.3c3.4 1.6 7.1 1.6 10.5 0l.4.3c-.5.3-1.1.6-1.7.8.3.7.7 1.3 1.1 1.9a18.2 18.2 0 0 0 5.5-2.8c.3-4-.7-7.4-2.8-10.4ZM8.7 13.4c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+    </a>
+    <a href="#wiki" onclick="openWiki(event)" title="Wiki" aria-label="Wiki">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4.5h9a3 3 0 0 1 3 3V20a2.5 2.5 0 0 0-2.5-2.5H4Z"/><path d="M20 4.5h-9a3 3 0 0 0-3 3V20a2.5 2.5 0 0 1 2.5-2.5H20Z"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div id="landing-view">
+
+  <section class="hero" id="hero">
+    <img class="hero-title-img" src="avatarlegacy-title.png" alt="AvatarLegacy">
+    <p class="hero-sub"><b>A 4 elements</b> minecraft server.</p>
+  </section>
+
+  <section class="section" data-rail="0">
+    <div class="section-copy">
+      <div class="eyebrow">Bending</div>
+      <h2>[Section Title]</h2>
+      <p>[Text placeholder]</p>
+      <p>[Text placeholder]</p>
+    </div>
+    <div class="section-media">
+      <div class="media-frame"><span class="tag">Image placeholder</span></div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div></div>
+
+  <section class="section reverse" data-rail="1">
+    <div class="section-copy">
+      <div class="eyebrow">Skill Trees</div>
+      <h2>[Section Title]</h2>
+      <p>[Text placeholder]</p>
+      <p>[Text placeholder]</p>
+    </div>
+    <div class="section-media">
+      <div class="media-frame"><span class="tag">Image placeholder</span></div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div></div>
+
+  <div class="sticky-section" data-rail="2">
+    <div class="sticky-media-wrap">
+      <div class="sticky-media"><span class="tag">Image placeholder</span></div>
+    </div>
+    <div>
+      <div class="sticky-copy-block">
+        <div class="step">01</div>
+        <h3>[Section Title]</h3>
+        <p>[Text placeholder]</p>
+      </div>
+      <div class="sticky-copy-block">
+        <div class="step">02</div>
+        <h3>[Section Title]</h3>
+        <p>[Text placeholder]</p>
+      </div>
+      <div class="sticky-copy-block">
+        <div class="step">03</div>
+        <h3>[Section Title]</h3>
+        <p>[Text placeholder]</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><div class="line"></div></div>
+
+  <section class="section" data-rail="3">
+    <div class="section-copy">
+      <div class="eyebrow">Nations</div>
+      <h2>[Section Title]</h2>
+      <p>[Text placeholder]</p>
+      <p>[Text placeholder]</p>
+    </div>
+    <div class="section-media">
+      <div class="media-frame"><span class="tag">Image placeholder</span></div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div></div>
+
+  <section class="section reverse" data-rail="4">
+    <div class="section-copy">
+      <div class="eyebrow">PvP &amp; Arenas</div>
+      <h2>[Section Title]</h2>
+      <p>[Text placeholder]</p>
+      <p>[Text placeholder]</p>
+    </div>
+    <div class="section-media">
+      <div class="media-frame"><span class="tag">Image placeholder</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-title"><img class="foot-logo" src="avatarlegacy-logo.png" alt="AvatarLegacy"></div>
+    <div class="foot-links">
+      <a href="https://discord.gg/PEASt8et46" target="_blank" rel="noopener">Discord</a>
+      <a href="#wiki" onclick="openWiki(event)">Wiki</a>
+    </div>
+    <div class="copyright">A 4 elements minecraft server.</div>
+  </footer>
+
+</div>
+
+<div id="wiki-view">
+  <div class="wiki-overlay" onclick="toggleSidebarMenu()"></div>
+  <button class="sidebar-reopen" onclick="toggleSidebarMenu()" title="Open wiki menu" aria-label="Open wiki menu">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="wiki-shell">
+    <aside class="wiki-sidebar" id="wikiSidebar">
+      <div class="sidebar-top">
+        <span class="back" onclick="goHome()">&larr; AvatarLegacy</span>
+        <button class="sidebar-collapse" onclick="toggleSidebarMenu()" title="Close sidebar" aria-label="Close sidebar">&#10005;</button>
+      </div>
+      <div class="wiki-label">Wiki</div>
+      <div id="wiki-nav-list"></div>
+    </aside>
+    <main class="wiki-main" id="wiki-main"></main>
+  </div>
+</div>
+
+<script>
+  const wikiPages = [
+    "Bending","Skill-Trees","Statistics","Avatar","Nations","Brewing",
+    "Food","Crops","Fishing","Jobs","Seasons","Mobs","Economy","PvP"
+  ];
+
+  const WIKI_DATA = {
+    "Bending":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Skill-Trees":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Statistics":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Avatar":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Nations":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Brewing":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Food":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]"],
+      image:""
+    },
+    "Crops":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Fishing":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Jobs":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Seasons":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Mobs":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "Economy":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      image:""
+    },
+    "PvP":{
+      description:"[Description placeholder]",
+      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      image:""
+    }
+  };
+
+  const navList = document.getElementById('wiki-nav-list');
+  const wikiMain = document.getElementById('wiki-main');
+  const isMobile = () => window.innerWidth <= 800;
+
+  function setActive(name){
+    navList.querySelectorAll('.wiki-nav-item').forEach(function(i){
+      i.classList.toggle('active', i.dataset.name === name);
+    });
+  }
+
+  function renderWikiHome(){
+    wikiMain.innerHTML =
+      '<div class="wiki-article">' +
+        '<div class="wiki-hero">' +
+          '<img class="wiki-hero-title" src="avatarlegacy-title.png" alt="AvatarLegacy">' +
+          '<p class="wiki-hero-sub"><b>Wiki</b></p>' +
+        '</div>' +
+        '<p class="wiki-desc">[Description placeholder]</p>' +
+        '<p class="wiki-text">[Text placeholder]</p>' +
+        '<div class="wiki-hint">Use the sidebar to browse topics.</div>' +
+      '</div>';
+    setActive(null);
+    wikiMain.scrollTop = 0;
+  }
+
+  function renderWikiPage(name){
+    const data = WIKI_DATA[name] || {description:"[Description placeholder]", paragraphs:["[Text placeholder]"], image:""};
+    const idx = wikiPages.indexOf(name);
+    const prev = idx > 0 ? wikiPages[idx - 1] : null;
+    const next = idx > -1 && idx < wikiPages.length - 1 ? wikiPages[idx + 1] : null;
+
+    let html = '<div class="wiki-article">';
+    html += '<div class="wiki-page-title">' + name + '</div>';
+    html += '<p class="wiki-desc">' + data.description + '</p>';
+    data.paragraphs.forEach(function(p){
+      html += '<p class="wiki-text">' + p + '</p>';
+    });
+    if(data.image){
+      html += '<div class="wiki-img-placeholder"><img src="' + data.image + '" alt="' + name + '"></div>';
+    }
+    html += '<div class="topic-nav">';
+    html += prev
+      ? '<button class="topic-nav-btn prev" data-topic="' + prev + '"><span class="dir">Go to previous topic</span><span class="topic">' + prev + '</span></button>'
+      : '<span></span>';
+    html += next
+      ? '<button class="topic-nav-btn next" data-topic="' + next + '"><span class="dir">Go to next topic</span><span class="topic">' + next + '</span></button>'
+      : '<span></span>';
+    html += '</div>';
+    html += '</div>';
+
+    wikiMain.innerHTML = html;
+    wikiMain.querySelectorAll('.topic-nav-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        renderWikiPage(btn.dataset.topic);
+      });
+    });
+    setActive(name);
+    wikiMain.scrollTop = 0;
+    document.body.classList.remove('wiki-drawer-open');
+  }
+
+  wikiPages.forEach(function(name, idx){
+    const item = document.createElement('div');
+    item.className = 'wiki-nav-item';
+    item.dataset.name = name;
+    item.innerHTML = '<span class="n">' + String(idx + 1).padStart(2, '0') + '</span><span>' + name + '</span>';
+    item.addEventListener('click', function(){
+      renderWikiPage(name);
+      if(isMobile()) toggleSidebarMenu();
+    });
+    navList.appendChild(item);
+  });
+
+  function toggleSidebarMenu(){
+    if(isMobile()){
+      document.body.classList.toggle('wiki-drawer-open');
+    } else {
+      document.body.classList.toggle('wiki-sidebar-hidden');
+    }
+  }
+
+  function openWiki(e){
+    if(e) e.preventDefault();
+    document.body.classList.add('wiki-mode');
+    document.body.classList.remove('wiki-drawer-open');
+    renderWikiHome();
+    window.scrollTo(0,0);
+    history.pushState(null, '', '#wiki');
+  }
+
+  function goHome(){
+    document.body.classList.remove('wiki-mode','wiki-drawer-open','wiki-sidebar-hidden');
+    window.scrollTo(0,0);
+    history.pushState(null, '', '#');
+  }
+
+  if(location.hash === '#wiki') openWiki();
+
+  const railParents = document.querySelectorAll('[data-rail]');
+  const revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.35 });
+  railParents.forEach(function(el){ revealObserver.observe(el); });
+
+  const blockObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.sticky-copy-block').forEach(function(el){ blockObserver.observe(el); });
+
+  const heroImg = document.querySelector('.hero-title-img');
+  window.addEventListener('scroll', function(){
+    const y = window.scrollY;
+    if(y < window.innerHeight){
+      heroImg.style.transform = 'translateY(' + (y * 0.08) + 'px) scale(' + (1 - y * 0.00015) + ')';
+    }
+  });
+</script>
+</body>
+</html>
