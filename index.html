@@ -304,6 +304,22 @@
   }
   .wiki-desc{color:var(--text-dim);font-size:16px;line-height:1.7;margin-bottom:30px;}
   .wiki-text{color:var(--text-dim);font-size:15px;line-height:1.75;margin-bottom:16px;}
+  .wiki-text strong{color:var(--text);font-weight:600;}
+  .wiki-text .subtitle{
+    display:block;font-family:var(--font-display);color:var(--text);
+    font-weight:600;font-size:19px;letter-spacing:-0.01em;
+    margin:4px 0 10px;padding-top:6px;
+  }
+  .wiki-text ul{margin:8px 0 0 18px;padding:0;}
+  .wiki-text li{margin-bottom:4px;font-weight:400;}
+  .wiki-text li strong{font-weight:400;color:inherit;}
+  .wiki-text a{color:var(--lavender);text-decoration:underline;text-underline-offset:2px;}
+  .wiki-text code{
+    font-family:'Manrope', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:0.88em;color:var(--lavender);
+    background:var(--surface-2);border:1px solid var(--border);
+    padding:1.5px 6px;border-radius:5px;white-space:nowrap;
+  }
   .wiki-hint{
     margin-top:40px;padding:18px 20px;border-radius:12px;
     background:var(--surface);border:1px dashed var(--border);
@@ -500,78 +516,131 @@
 <script>
   const wikiPages = [
     "Bending","Skill-Trees","Statistics","Avatar","Nations","Brewing",
-    "Food","Crops","Fishing","Jobs","Seasons","Mobs","Economy","PvP"
+    "Food","Crops","Fishing","Jobs","Seasons and Celestial Events","Mobs","Economy","PvP"
   ];
 
   const WIKI_DATA = {
     "Bending":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"How to bend the four elements in minecraft.",
+      paragraphs:[
+        '<span class="subtitle">ProjectKorra</span>We at AvatarLegacy use the plugin ProjectKorra, with some modifications, to allow you to bend the four elements in minecraft, without any client-side mods. Check them out at: <a href="https://projectkorra.com" target="_blank" rel="noopener">projectkorra.com</a>',
+        '<span class="subtitle">Choosing bending</span>Upon loading into the world, you will be prompted to use <code>/b choose</code> to choose your element. It is recommended to use <code>/server PvP</code> <strong>BEFORE</strong> joining the main server to test out all the moves available on the server. This is because you will have only one day to finalize your element on the main server, before it becomes locked forever. The way to change it back is to find an Element Rune (in structure chests) which can be used once to change your element, or buy a rune from the store.',
+        '<span class="subtitle">Binding and using moves</span>After choosing your element, you can use <code>/b bind</code> to bind a move to any one of your 9 slots (shown on the scoreboard). If you don\'t know how to use a move, use <code>/b help {move name}</code>. If you don\'t know what moves your element has available, use <code>/b display {element}</code>. Note: you spawn in with 3 bindable moves, you can learn more using <a href="#" data-wiki-link="Skill-Trees">Skill-Trees</a>.',
+        '<span class="subtitle">Subelements</span>Each element has its own subelements, except for Chi-Blocking (not an element). You have a chance at getting a subelement trait upon joining the server, and if you want more subelements, you have to either:<ul><li>Find runes in structure chests at a rare chance</li><li>Purchase a /reroll in our store</li></ul>',
+        '<span class="subtitle">Spawning</span>After choosing your element, you will spawn at your respective element spawn (or a random location if you chose chi blocking), where you can begin your journey.',
+        '<span class="subtitle">Other commands</span>Using <code>/b preset create {name}</code> creates a preset of your currently bound moves. Using <code>/b copy {player}</code> copies their binds, and using <code>/b who {player}</code> shows the player\'s element and currently bound moves.'
+      ],
       image:""
     },
     "Skill-Trees":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      description:"How to progress further in AvatarLegacy.",
+      paragraphs:[
+        '<span class="subtitle">What is a Skill-Tree</span>A Skill-Tree is a feature that allows you to learn new moves by gaining XP, Kills, Playtime and Minecraft XP levels. To access it, use <code>/skilltree</code>. Avatars can use the <code>/skilltree {element}</code> command. You can learn more about that in the <a href="#" data-wiki-link="Avatar">Avatar</a> section.',
+        '<span class="subtitle">Requirements</span>Each move requires XP, and if applicable: Kills, Playtime and Minecraft XP levels. Farming kills and AFKing are strictly banned. There are plugins that limit farms as well, so money has to be earned by grinding.',
+        '<span class="subtitle">Dependencies</span>Some moves may require other moves to be unlocked first. All the Skill-Trees generally branch off into three sections: Utility, Movement, Attack. If applicable, Defense is also a section in some Skill-Trees.'
+      ],
       image:""
     },
     "Statistics":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"Your stats on AvatarLegacy.",
+      paragraphs:[
+        '<span class="subtitle">Bending Strength, Speed and Range</span>Bending strength is your ability to bend. 50% means that your attacks will only do half the normal damage. 100% means your attacks will do normal amounts of damage. Some coming features may give you over 100% bending strength! Chi blocking is not affected by this statistic as it isn\'t an element. Your Bending Speed is the speed at which your bending sends projectiles, or how fast movement moves are. Your Bending Range is the range of your bending moves.',
+        '<span class="subtitle">Bending Spirit</span>Your bending spirit is the core of your player. So long as it stays alive, so does your player, but after each death your player loses a part of its bending spirit, and after 30 your character is gone forever. To heal the bending spirit simply do <code>/stats restore</code>. You can use XP and yen to heal it back, but it is expensive. The <a href="#" data-wiki-link="Avatar">Avatar</a> has a different amount of bending spirit.',
+        '<span class="subtitle">XP</span>Experience (XP) is what allows you to progress through the game. It\'s more rare than money and is very precious. With XP you can restore your stats, and you can progress in the rankings to become the Avatar and have an advantage in case of events. You can convert yen to XP using <code>/xpconvert</code> or earn it through kills and playtime.',
+        '<span class="subtitle">Losing Stats</span>On death, you lose one of the following:<ul><li>1-5% Bending Strength</li><li>1-5% Bending Range</li><li>1-5% Bending Speed</li><li>1-10 XP</li><li>500-1000 Yen</li></ul>You can get the strength, range and speed back within 1 day, or you can restore it using XP and Money (<code>/stats restore</code>).'
+      ],
       image:""
     },
     "Avatar":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      description:"Master of the four elements.",
+      paragraphs:[
+        '<span class="subtitle">Choosing the Avatar</span>The Avatar is chosen in the cycle: Fire &gt; Air &gt; Water &gt; Earth. Each time it will be a native bender from the element who becomes the Avatar. When the server releases, the Avatar gets chosen in 7 days. The statistics that the Avatar depends on are:<ul><li>Damage dealt by bending</li><li>XP</li><li>Playtime</li><li>The element in the cycle</li><li>Amount of moves mastered</li></ul>You can view who is on track to become the next Avatar using <code>/avatar scores</code>. Once the Avatar dies, the next Avatar is chosen in another 7 days.',
+        '<span class="subtitle">The world around the Avatar</span>If the Avatar dies, the world mourns. Every bender receives a 10% bending strength debuff. As for the Avatar themselves, they lose their player forever. That means that being the Avatar has its own risks, which involves losing their player.',
+        '<span class="subtitle">The Avatar\'s buffs and debuffs</span>The Avatar has the power to master all four elements at once, and the option to learn chi-blocking. To learn a new element (to unlock that element\'s skill-tree), the Avatar must find themselves a teacher with sufficient playtime. That teacher can then teach the Avatar their element by using <code>/teach</code>. The requirements are to stand close to each other for 90 seconds, and not die. During teaching, sounds are produced and both players get the glowing effect. As debuffs, the Avatar has 3 bending spirit which CANNOT be re-healed - meaning they have 3 lives. When unlocking a skill-tree, the Avatar must still learn more moves, as they only get the base moves from that element.',
+        '<span class="subtitle">Inactivity</span>In case the Avatar is inactive, a new one is chosen.',
+        '<span class="subtitle">Avatar State</span>The Avatar State is the defense mechanism of the Avatar, giving them immense power and buffs if their health is low or they manage to learn and use it on command. It has a major cooldown of a few hours, and if the Avatar dies in the Avatar State, there will be no Avatar reincarnation for <strong>1 month</strong>.'
+      ],
       image:""
     },
     "Nations":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"First steps to global domination.",
+      paragraphs:[
+        '<span class="subtitle">Creating a nation</span>To create a nation, you must have at least 10 stacks of wood, 10 stacks of cobblestone, and some Minecraft XP and AvatarLegacy XP. You can use <code>/nation create {name}</code> to create your nation, and then you must place your nation core (given upon nation creation) where you wish to base your nation. Recommended near the element spawns. After placing the nation core, that\'s when you can use other nation commands (use <code>/nation</code> to list the commands).',
+        '<span class="subtitle">Commands and Features</span>List of commands:<ul><li><code>/nation create</code> - Create a nation</li><li><code>/nation setspawn</code> - Set the spawn of your nation</li><li><code>/nation join</code> - Join a nation</li><li><code>/nation invite</code> - Invite someone to your nation</li><li><code>/nation leave</code> - Leave a nation</li><li><code>/nation kick</code> - Kick someone from your nation</li><li><code>/nation claim</code> - Claim a chunk (near your element spawn). Nation Cores are NOT affected by this</li><li><code>/nation unclaim</code> - Unclaim a chunk and use it elsewhere</li><li><code>/nation spawn</code> - Go to your nation spawn</li><li><code>/nation treasury</code> - View your treasury (if your nation core is broken, the nation that did it gets your money)</li><li><code>/nation tax</code> - Tax your citizens</li><li><code>/nation ally</code> - Ally a nation</li><li><code>/nation war</code> - Go to war with a nation (other nation has to accept)</li><li><code>/nation truce</code> - Hold a truce</li><li><code>/nation enemy</code> - Mark players of an enemy nation</li><li><code>/nation element</code> - Set the main element of your nation</li><li><code>/nation refugees</code> - Allow other elements to join your nation</li><li><code>/nation withdraw</code> - Withdraw money from your treasury</li><li><code>/nation shield</code> - Shield your nation core</li><li><code>/nation disband</code> - Disband your nation</li></ul>Right clicking on the nation core gives you a GUI to increase: Bending Strength, HP, and Shield protection for your citizens, using money from the treasury.',
+        '<span class="subtitle">Nation Cores</span>Nation cores can be placed only above sea level (y=63). They have to be placed to create a nation, and are breakable. If they break, your nation disbands and your claims, treasury and buffs go away, alongside 500XP as a debuff for losing a war. The nation core has to have at least 1 person from the respective nation online to be broken; if the nation core was broken but not completely, it stays in that state (e.g. 15/20 HP for the core). To remove one HP from the core, you have to break it once (same rate for each tool). Shields can increase HP or prevent it from breaking for some time. If a player is purposefully logging off to prevent the core from being broken, clip it and send it to staff on the Discord.'
+      ],
       image:""
     },
     "Brewing":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      description:"GET DRUNK",
+      paragraphs:[
+        '<span class="subtitle">The Plugin</span>The plugin we use for brewing is called "BreweryX". You can find more about them at: <a href="https://breweryx.breweryteam.dev/" target="_blank" rel="noopener">breweryx.breweryteam.dev</a>.',
+        '<span class="subtitle">How to brew</span>It\'s recommended to read the wiki at <a href="https://breweryx.breweryteam.dev/docs/gameplay/brewing/" target="_blank" rel="noopener">breweryx.breweryteam.dev/docs/gameplay/brewing</a> before reading further.<br><br>You will not need the same setup for tea as you do alcohol.<br><br>For alcohol, you only need a cauldron full of water and a campfire below it - it\'s significantly easier. Whilst the unique brewing on AvatarLegacy is almost 100% tea recipes, there are also juices. There are some basic tea recipes at the end of this section.<br><br>Every tea recipe will require leaves, such as oak leaves, leaf litters, or sometimes flowers. It\'s recommended before starting to make tea that you find at least 5 different kinds of trees to harvest their leaves. Each tea recipe needs at least 16 leaf blocks total (sometimes leaf litter) to work.<br><br>No tea requires aging or distilling.<br><br>All tree leaf blocks represent tea leaves. Leaf litter represents delicate tea leaves. Netherwart represents spices. Short grass represents herbs.<br><br>Those are most of the ingredients you will need for your tea making journey. Mangrove roots and golden apples are also a common ingredient.<ul><li><strong>Green Tea</strong> - 16 jungle leaves, 5 short grass. Cook time: 1min</li><li><strong>Basic Tea</strong> - 16 oak leaves. Cook time: 1min</li><li><strong>Cactus Juice</strong> - 2 cactus, 1 iron sword. Cook time: 1min</li><li><strong>Spiced Tea</strong> - 16 oak leaves, 3 netherwart</li></ul>'
+      ],
       image:""
     },
     "Food":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]"],
+      description:"Eat even MORE food.",
+      paragraphs:[
+        '<span class="subtitle">How to see and craft food recipes</span>Use <code>/foodcraft</code> to see the recipes for over 80+ types of food. You can craft and make these foods in the crafting table by following the recipes for them - it\'s that simple. Certain foods may give certain buffs or debuffs.'
+      ],
       image:""
     },
     "Crops":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"Slightly more realistic farming :D",
+      paragraphs:[
+        '<span class="subtitle">Getting and farming crops</span>You can get crops from the shop, using <code>/cropshop</code>. There, you can buy seeds for plants, and you can plant them. You should use sprinklers to water your plants, and use water cans to fill up your sprinklers! If your soil isn\'t watered, plants will not grow there. Use <code>/sellcrops</code> to sell your crops for a profit, or eat them because they taste good.'
+      ],
       image:""
     },
     "Fishing":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      description:"Slightly more realistic fishing :D",
+      paragraphs:[
+        '<span class="subtitle">How to fish</span>Throw your fishing rod into the sea and wait for fish. Once a fish is hooked on, reel the rod back in, complete the minigame and get a custom fish! You can sell it in the shop or keep it as a prize - it comes with a size marking as well. That\'s all there is here.'
+      ],
       image:""
     },
     "Jobs":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"Yes it means employment.",
+      paragraphs:[
+        '<span class="subtitle">How to get a job</span>Use <code>/jobs</code> and click on the "Free Jobs" section in the GUI. Then click the job you want and start working! Premium jobs require a rank, which you can buy in the store. Just start working to earn money and XP to get even more rewards from your job.'
+      ],
       image:""
     },
-    "Seasons":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+    "Seasons and Celestial Events":{
+      description:"Four seasons in Minecraft.",
+      paragraphs:[
+        '<span class="subtitle">Seasons</span>In AvatarLegacy, there are four seasons. They follow an in-game calendar, which can be accessed using <code>/season</code>. In each season, crop growth, your personal temperature and mob spawns will be affected. The exact details of these are kept secret, but players can observe changes throughout the year to find out. Fireflies, shooting stars and falling leaves can be seen throughout the seasons.',
+        '<span class="subtitle">Temperature</span>You can see your temperature near your hotbar. It\'s best to stay in the 25 degrees Celsius range for temperature. If you reach under 0 degrees, you begin to get visible breath, and if your temperature is above 40, you begin to sweat. These effects are visible with particles. If you get too cold or too hot, you can burn or freeze to death! Get near a source of heat or a cold area to return to normal temperature.',
+        '<span class="subtitle">Celestial events</span>Throughout your time on AvatarLegacy, you may encounter a celestial event. These events will buff the strength of benders. Here is a list of the celestial events:<ul><li><strong>Sozin\'s Comet</strong> - Buffs Firebending</li><li><strong>Blue Moon</strong> - Buffs Waterbending</li><li><strong>Wind Convergence</strong> - Buffs Airbending</li><li><strong>Tectonic Alignment</strong> - Buffs Earthbending</li><li><strong>Solar Eclipse</strong> - Blocks Firebending</li><li><strong>Lunar Eclipse</strong> - Blocks Waterbending</li></ul>Chi-blocking is not included in these events, as it is not a bending discipline.'
+      ],
       image:""
     },
     "Mobs":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"Custom mobs and Avatar-inspired items.",
+      paragraphs:[
+        '<span class="subtitle">Types of mobs</span>AvatarLegacy has over 50+ custom mobs. From bears, tigers and crocodiles to fish, capybara and monkeys. All of these mobs spawn naturally at a rare chance in the world - some are hostile, while others are peaceful. There is backend development going on with this feature, it may not be fully functional.',
+        '<span class="subtitle">Stronger Mobs</span>The further you go out from coordinates (0,0,0) in AvatarLegacy, the stronger all mobs get. Mobs can reach &gt;100 hearts if you travel far enough! Make sure to keep this in mind when you make a base far out.',
+        '<span class="subtitle">Avatar-Inspired Mobs and Items</span><strong>The Sky Bison:</strong><ul><li>Tamed by: Wheat</li><li>Speed: ~3x the speed of a happy ghast</li><li>Damage: Does not do damage (under development)</li></ul><strong>Airbending Glider:</strong><ul><li>Made by: A recipe you need to find out yourself :D</li><li>Speed: Same speed as an elytra, however fireworks do not work with these - you must use AirBlast to move forward</li><li>Durability: Same as an elytra</li></ul>',
+        '<span class="subtitle">Runes</span>Runes are special items found in the chests of structures. They can be found at a rare chance, and they give you the ability to:<ul><li>Learn another subelement</li><li>Change your bending discipline</li><li>Or find information about [Redacted] :O</li></ul>It may be that some of your runes need further requirements, such as kills, or certain undisclosed tasks that you will find out about sooner or later :)',
+        '<span class="subtitle">Known errors</span>These features are under development, so they may not be 100% functional - we hope you understand.'
+      ],
       image:""
     },
     "Economy":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]"],
+      description:"Capitalism.",
+      paragraphs:[
+        '<span class="subtitle">How to use the shop</span>Use <code>/shop</code> to open the shop.'
+      ],
       image:""
     },
     "PvP":{
-      description:"[Description placeholder]",
-      paragraphs:["[Text placeholder]","[Text placeholder]","[Text placeholder]"],
+      description:"Agni Kai.",
+      paragraphs:[
+        '<span class="subtitle">PvP server</span>You can PvP without the fear of losing progress by using <code>/server PvP</code>. There you can use <code>/duel {player}</code> to duel a player, or <code>/ffa</code> to join a Free-For-All arena. Make sure to choose your bending before joining the FFA. To leave the FFA, use <code>/ffa leave</code>; to leave a duel use <code>/leave</code> (if it doesn\'t automatically send you back).',
+        '<span class="subtitle">Combat</span>Leaving the game during combat results in combat logging, which will clear your inventory and result in immediate death. To prevent this, wait till CombatLogX says you are out of combat in chat. Explosive PvP is banned and does no damage. Maces and Spears are also banned and removed from the game. Any vanilla PvP abuse will result in punishment.',
+        '<span class="subtitle">Agni Kai and Probending</span>Coming soon on the PvP server!'
+      ],
       image:""
     }
   };
@@ -593,8 +662,7 @@
           '<img class="wiki-hero-title" src="avatarlegacy-title.png" alt="AvatarLegacy">' +
           '<p class="wiki-hero-sub"><b>Wiki</b></p>' +
         '</div>' +
-        '<p class="wiki-desc">[Description placeholder]</p>' +
-        '<p class="wiki-text">[Text placeholder]</p>' +
+        '<p class="wiki-desc">Everything you need to know about bending, progression, nations, and life on AvatarLegacy.</p>' +
         '<div class="wiki-hint">Use the sidebar to browse topics.</div>' +
       '</div>';
     setActive(null);
@@ -611,7 +679,7 @@
     html += '<div class="wiki-page-title">' + name + '</div>';
     html += '<p class="wiki-desc">' + data.description + '</p>';
     data.paragraphs.forEach(function(p){
-      html += '<p class="wiki-text">' + p + '</p>';
+      html += '<div class="wiki-text">' + p + '</div>';
     });
     if(data.image){
       html += '<div class="wiki-img-placeholder"><img src="' + data.image + '" alt="' + name + '"></div>';
@@ -630,6 +698,12 @@
     wikiMain.querySelectorAll('.topic-nav-btn').forEach(function(btn){
       btn.addEventListener('click', function(){
         renderWikiPage(btn.dataset.topic);
+      });
+    });
+    wikiMain.querySelectorAll('[data-wiki-link]').forEach(function(link){
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        renderWikiPage(link.dataset.wikiLink);
       });
     });
     setActive(name);
